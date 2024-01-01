@@ -31,19 +31,15 @@ import java.util.stream.Collectors;
 public class AuthService {
 
     private final ModelMapper mapper;
-    private final UserRepo userRepo;
     private final UserRepo userRepositories;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final AuthoritiesRepository authoritiesRepository;
     private static final Logger log = LoggerFactory.getLogger(AuthService.class);
 
-    public AuthService(ModelMapper mapper, UserRepo userRepo, UserRepo userRepositories,
-                       BCryptPasswordEncoder passwordEncoder, AuthoritiesRepository authoritiesRepository) {
+    public AuthService(ModelMapper mapper, UserRepo userRepositories,
+                       BCryptPasswordEncoder passwordEncoder) {
         this.mapper = mapper;
-        this.userRepo = userRepo;
         this.userRepositories = userRepositories;
         this.passwordEncoder = passwordEncoder;
-        this.authoritiesRepository = authoritiesRepository;
     }
 
     @Transactional(rollbackFor = Throwable.class)
@@ -65,7 +61,6 @@ public class AuthService {
 
     public Boolean hasAuthority(HttpServletRequest request, String authority) throws AccessDeniedException {
         try {
-            System.out.println("dasdasd");
             OAuth2Authentication userPrincipal = (OAuth2Authentication) request.getUserPrincipal();
             if (userPrincipal == null) {
                 throw new CommonException(HttpStatus.UNAUTHORIZED, "Please provide the valid authorization token");
@@ -90,7 +85,7 @@ public class AuthService {
         CustomUserDetails defaultUserDetails =
                 (CustomUserDetails) ((OAuth2Authentication) request.getUserPrincipal()).getUserAuthentication()
                         .getPrincipal();
-        User user = defaultUserDetails.getUser();//retrieveUser(defaultUserDetails.getUser().getEmailId());
+        User user = defaultUserDetails.getUser();
         Collection<? extends GrantedAuthority> authorities = defaultUserDetails.getAuthorities();
         user.setAuthorities(authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
         String token = request.getHeader("Authorization");
@@ -101,17 +96,5 @@ public class AuthService {
                 token = "Bearer" + token;
         }
         return user;
-    }
-
-    public User retrieveUser(String userName) throws CommonException {
-
-        User optionalUserData = userRepo.findByEmailId(userName).get();
-        if (CommonUtils.isNull(optionalUserData))
-            throw new CommonException(HttpStatus.NOT_FOUND, "Please enter registered email");
-
-        List<String> authorities
-                = authoritiesRepository.findByUserRoleId(String.valueOf(optionalUserData.getRole()));
-        optionalUserData.setAuthorities(authorities);
-        return optionalUserData;
     }
 }
