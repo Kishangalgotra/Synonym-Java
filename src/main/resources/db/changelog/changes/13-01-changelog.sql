@@ -26,3 +26,14 @@ CREATE TABLE IF NOT EXISTS user (
     `deleted` BOOLEAN
 )   ENGINE = InnoDB
     DEFAULT CHARSET = 'UTF8';
+
+-- changeset DELL:1668284977246-4
+CREATE TABLE IF NOT EXISTS authorities (
+    `id` BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    `role` VARCHAR(50) NOT NULL,
+    `authority` VARCHAR(255) NOT NULL,
+    `created_on` DATETIME NULL,
+    `modified_on` DATETIME NULL,
+    `deleted` BOOLEAN
+    )   ENGINE = InnoDB
+    DEFAULT CHARSET = 'UTF8';

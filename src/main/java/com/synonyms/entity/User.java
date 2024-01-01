@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.persistence.Table;
 import javax.persistence.GeneratedValue;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -76,4 +77,14 @@ public class User {
     public void setUniqueId(String uniqueId) {
         this.password = uniqueId;
     }
+
+    public List<String> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(List<String> authorities) {
+        this.authorities = authorities;
+    }
+
+    transient private List<String> authorities;
 }

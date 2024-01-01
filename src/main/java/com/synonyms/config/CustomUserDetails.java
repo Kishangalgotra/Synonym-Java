@@ -15,9 +15,9 @@ public class CustomUserDetails implements UserDetails {
     private static final long serialVersionUID = 1L;
 
     private User user;
-    private final List<Authorities> authorities;
+    private final List<String> authorities;
 
-    public CustomUserDetails(User user, List<Authorities> authorities) {
+    public CustomUserDetails(User user, List<String> authorities) {
         this.user = user;
         this.authorities = authorities;
     }
@@ -25,8 +25,8 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>(authorities.size());
-        for (Authorities auth : authorities) {
-            grantedAuthorities.add(new SimpleGrantedAuthority(auth.getAuthority()));
+        for (String auth : authorities) {
+            grantedAuthorities.add(new SimpleGrantedAuthority(auth));
         }
         return grantedAuthorities;
     }

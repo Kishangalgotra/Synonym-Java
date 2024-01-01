@@ -9,9 +9,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.synonyms.repository.SynonymsRepo;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -31,19 +33,24 @@ public class SynonymsController {
     }
 
     @PostMapping
+    @PreAuthorize("@authService.hasAuthority(#httpServletRequest, 'CREATE_SYNONYM')")
     public ResponseEntity<ApplicationResponse<SynonymsCreationResponse>> createOrUpdateSynonyms(
-            @RequestBody SynonymsCreateRequest request) {
+            HttpServletRequest httpServletRequest, @RequestBody SynonymsCreateRequest request) {
         return ResponseEntity.ok(ApplicationResponse.getSuccessResponse(synonymsService.createOrUpdateSynonym(request)));
     }
 
     @GetMapping
-    public ResponseEntity<ApplicationResponse<List<String>>> getSynonyms(@RequestParam("word") String word) {
+    @PreAuthorize("@authService.hasAuthority(#httpServletRequest, 'VIEW_SYNONYM')")
+    public ResponseEntity<ApplicationResponse<List<String>>> getSynonyms(
+            HttpServletRequest httpServletRequest, @RequestParam("word") String word) {
         List<String> synonymsList = synonymsService.fetchSynonyms(word);
         return ResponseEntity.ok(ApplicationResponse.getSuccessResponse(synonymsList));
     }
 
     @DeleteMapping
-    public ResponseEntity<ApplicationResponse<List<String>>> deleteSynonyms(@RequestParam("word") String word) {
+    @PreAuthorize("@authService.hasAuthority(#httpServletRequest, 'DELETE_SYNONYM')")
+    public ResponseEntity<ApplicationResponse<List<String>>> deleteSynonyms(
+            HttpServletRequest httpServletRequest, @RequestParam("word") String word) {
         return ResponseEntity.ok(ApplicationResponse.getSuccessResponse(synonymsService.deleteSynonym(word)));
     }
 }

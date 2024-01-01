@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface AuthoritiesRepository extends JpaRepository<Authorities, Long>, JpaSpecificationExecutor<Authorities> {
 
-    @Cacheable(value = "applicationCache", key = "'config:' + #role", unless = "#result==null")
-    @Query("Select authorities from Authorities as authorities where authorities.userRole = :role")
-    List<Authorities> findByUserRole(@Param("role") String role);
+    //@Cacheable(value = "applicationCache", key = "'config:' + #role", unless = "#result==null")
+    @Query("Select authorities.authority from Authorities as authorities where authorities.userRole = :role")
+    List<String> findByUserRoleId(@Param("role") String role);
 }

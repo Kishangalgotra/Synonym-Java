@@ -15,31 +15,30 @@ public class Authorities implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "authority_id")
-    private Long authorityId;
+    @Column(name = "id")
+    private Long id;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "user_role")
-    private UserRole userRole;
+    @Column(name = "role")
+    private String userRole;
 
     @NotNull
     @Column(name = "authority")
     private String authority;
 
     public Long getAuthorityId() {
-        return authorityId;
+        return id;
     }
 
     public void setAuthorityId(Long authorityId) {
-        this.authorityId = authorityId;
+        this.id = authorityId;
     }
 
-    public UserRole getUserRole() {
+    public String getUserRole() {
         return userRole;
     }
 
-    public void setUserRole(UserRole userRole) {
+    public void setUserRole(String userRole) {
         this.userRole = userRole;
     }
 
@@ -54,7 +53,7 @@ public class Authorities implements Serializable {
     public Authorities() {
     }
 
-    public Authorities(UserRole userRole, Authority authority) {
+    public Authorities(String userRole, Authority authority) {
         this.userRole = userRole;
         this.authority = authority.name();
     }

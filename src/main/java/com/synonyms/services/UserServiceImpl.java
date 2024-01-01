@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserDetailsService {
         User user = userRepositories.findByEmailId(email)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("USER_NOT_FOUND", email)));
 
-        List<Authorities> authorities = new ArrayList<>();//authoritiesRepository.findByUserRole(String.valueOf(user.getRole()));
+        List<String> authorities = authoritiesRepository.findByUserRoleId(user.getRole().name());
         return new CustomUserDetails(user, authorities);
     }
 }
